@@ -22,14 +22,10 @@ class MainWindow(QObject):
         self.vm_state = {}  # type: Dict[str, bool]
         self.trayIcon.setContextMenu(self.menu)
         self.vboxTool = VBox()
-        self.trayIcon.activated.connect(self.update_menu)
+        self.trayIcon.activated.connect(self.rebuild_menu)
         self.create_menu()
 
     def create_menu(self):
-        # self.exit_action = QAction('quit', self)
-        # self.menu.addSeparator()
-        # self.menu.addAction(self.exit_action)
-
         # Get the list of VM's
         vm_list = self.vboxTool.get_vm_list()
         for vm_name in vm_list:
@@ -37,13 +33,29 @@ class MainWindow(QObject):
                 continue
             self.add_vm_to_tray(vm_name)
         self.update_menu()
+        self.menu.addSeparator()
+        self.exit_action = QAction('Quit', self)
+        self.menu.addAction(self.exit_action)
+        self.exit_action.triggered.connect(self.hide)  # click to rebuild menu
+
+    def rebuild_menu(self):
+        """
+        rebuild menu. This application can't detect new VM generated or other actions in virtualbox
+        :return:
+        """
+        self.actionDict.clear()
+        self.vm_state.clear()
+        self.menu.clear()
+        self.create_menu()
 
     def update_menu(self):
-        print('update menu...')
+        """
+        update every virtual machine's state
+        :return:
+        """
         self.vboxTool.update()
         for vm_name in self.actionDict.keys():
             is_running = self.vboxTool.is_vm_running(vm_name)
-            print(vm_name, is_running)
             if is_running != self.vm_state[vm_name]:
                 self.set_action_icon(is_running, self.actionDict[vm_name])
                 self.vm_state[vm_name] = is_running
