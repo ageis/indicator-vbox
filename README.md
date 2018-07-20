@@ -2,6 +2,8 @@
 
 Rewrite with PyQt5 and Python3
 
+Launch/suspend your virtual machine created by virtualbox through tray icon.
+
 ### python module needed:
 
 * pyqt5
@@ -14,6 +16,10 @@ git clone https://github.com/SeptemberHX/indicator-vbox.git
 cd indicator-vbox
 python3 src/main.py
 ```
+
+left/middle click to refresh the machine list in the menu
+
+Launch/suspend machine by clicking target machine's name
 
 ### screenshot
 
