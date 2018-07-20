@@ -4,6 +4,8 @@ Rewrite with PyQt5 and Python3
 
 Launch/suspend your virtual machine created by virtualbox through tray icon.
 
+gtk version:  [click here](https://github.com/yurigorokhov/indicator-vbox)
+
 ### python module needed:
 
 * pyqt5
