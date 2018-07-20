@@ -11,13 +11,23 @@ gtk version:  [click here](https://github.com/yurigorokhov/indicator-vbox)
 * pyqt5
 * typing
 
-### run
+### install & run
 
 ```shell
 git clone https://github.com/SeptemberHX/indicator-vbox.git
 cd indicator-vbox
-python3 src/main.py
+sudo make install
+/opt/indicator-vbox/indicator-vbox
 ```
+
+### uninstall
+
+```shell
+cd indicator-vbox
+sudo make uninstall
+```
+
+### usage
 
 left/middle click to refresh the machine list in the menu
 
