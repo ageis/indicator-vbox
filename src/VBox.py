@@ -1,14 +1,15 @@
-import commands
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
 import subprocess
-import gtk
+from typing import *
 
 # Class for menu items
-class VBoxImageMenuItem(gtk.ImageMenuItem):
+class VBoxImageMenuItem:
     is_vm = False
     state = 0 # 0 > suspended 1 > running
     
     def __init__(self, title, is_vm):
-        gtk.ImageMenuItem.__init__(self, title)
         self.is_vm = is_vm
         self.state = 0
     
@@ -21,15 +22,14 @@ class VBoxImageMenuItem(gtk.ImageMenuItem):
     def get_name(self):
         return "VBoxImageMenuItem"
 
+
 # VirtualBox Class to interface with the program
-class VBox: 
-    
-    # list of running vm's
-    running_vms = []
-    # existing VM's
-    existing_vms = []
-    
+class VBox:
     def __init__(self):
+        # list of running vm's
+        self.running_vms = []
+        # existing VM's
+        self.existing_vms = []  # type: List[str]
         self.update()
     
     # does vm exist?
@@ -38,7 +38,10 @@ class VBox:
     
     # Populate existing vms
     def populate_existing_vms(self):
-        self.existing_vms = commands.getoutput("VBoxManage list vms | sed -e 's/^.*\\\"\(.*\)\\\".*$/\\1/'").split('\n')
+        self.existing_vms.clear()
+        for vm_name in subprocess.check_output("VBoxManage list vms | sed -e 's/^.*\\\"\(.*\)\\\".*$/\\1/'", shell=True).decode('utf-8').split('\n'):
+            if len(vm_name) != 0:
+                self.existing_vms.append(vm_name)
     
     # Retrieve the names of installed VM's
     def get_vm_list(self):
@@ -57,7 +60,7 @@ class VBox:
     
     # Check if a vm is running
     def __vm_running(self, vmname):
-        output = commands.getoutput("VBoxManage showvminfo \"" + vmname + "\" | grep State")
+        output = subprocess.check_output("VBoxManage showvminfo \"" + vmname + "\" | grep State", shell=True).decode('utf-8')
         if(output.count("running") > 0):
             return 1
         else:
