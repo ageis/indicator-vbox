@@ -89,16 +89,18 @@ class MainWindow(QObject):
         vm_name = self.sender().text()
         if self.vm_state[vm_name]:
             try:
-                self.vboxTool.suspend_VM(vm_name)
+                if self.vboxTool.suspend_VM(vm_name) == 0:
+                    self.trayIcon.showMessage('Succeed', 'Succeed to suspend VM {0}'.format(vm_name))
+                else:
+                    self.trayIcon.showMessage('Failed', 'Failed to suspend VM {0}.'.format(vm_name))
             except Exception as e:
                 self.trayIcon.showMessage('Failed', 'Failed to suspend VM {0}. {1}'.format(vm_name, e))
-            else:
-                self.trayIcon.showMessage('Succeed', 'Succeed to suspend VM {0}'.format(vm_name))
         else:
             try:
-                self.vboxTool.launch_VM(vm_name)
+                if self.vboxTool.launch_VM(vm_name) == 0:
+                    self.trayIcon.showMessage('Succeed', 'Succeed to start VM {0}'.format(vm_name))
+                else:
+                    self.trayIcon.showMessage('Failed', 'Failed to start VM {0}'.format(vm_name))
             except Exception as e:
                 self.trayIcon.showMessage('Failed', 'Failed to start VM {0}. {1}'.format(vm_name, e))
-            else:
-                self.trayIcon.showMessage('Succeed', 'Succeed to start VM {0}'.format(vm_name))
         self.update_menu()
